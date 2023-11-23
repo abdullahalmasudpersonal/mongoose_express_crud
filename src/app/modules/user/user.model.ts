@@ -18,11 +18,13 @@ const userSchema = new Schema<TUser>({
   userId: {
     type: Number,
     trim: true,
+    unique: true,
     required: [true, 'UserId is required'],
   },
   userName: {
     type: String,
     trim: true,
+    unique: true,
     required: [true, 'User Name is required'],
   },
   password: {
@@ -43,6 +45,7 @@ const userSchema = new Schema<TUser>({
   email: {
     type: String,
     trim: true,
+    unique: true,
     required: [true, 'Email is required'],
   },
   isActive: {

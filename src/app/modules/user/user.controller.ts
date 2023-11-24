@@ -21,8 +21,24 @@ const createUser = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'user created is successfully',
-      data: result,
+      message: 'User created  successfully!',
+      data: {
+        userId: result.userId,
+        username: result.userName,
+        fullName: {
+          firstname: result.fullName.firstName,
+          lustName: result.fullName.lustName,
+        },
+        age: result.age,
+        email: result.email,
+        isActive: result.isActive,
+        hobbies: result.hobbies,
+        address: {
+          street: result.address.street,
+          city: result.address.city,
+          country: result.address.country,
+        },
+      },
     });
   } catch (err: any) {
     res.status(500).json({
@@ -53,10 +69,30 @@ const getSingleUser = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: 'User fetched successfully!',
-      data: result,
+      data: {
+        userId: result?.userId,
+        username: result?.userName,
+        fullName: {
+          firstname: result?.fullName.firstName,
+          lustName: result?.fullName.lustName,
+        },
+        age: result?.age,
+        email: result?.email,
+        isActive: result?.isActive,
+        hobbies: result?.hobbies,
+        address: {
+          street: result?.address.street,
+          city: result?.address.city,
+          country: result?.address.country,
+        },
+      },
     });
-  } catch (err) {
-    console.log(err);
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Something went wrong',
+      error: err,
+    });
   }
 };
 

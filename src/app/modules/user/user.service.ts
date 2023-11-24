@@ -1,18 +1,29 @@
 import { TUser } from './user.interface';
-import { UserModel } from '../user.model';
+import { User } from '../user.model';
 
-const createUserIntoDB = async (user: TUser) => {
-  const result = await UserModel.create(user);
+const createUserIntoDB = async (userData: TUser) => {
+  if (await User.isUserExists(userData.userId.toString())) {
+    throw new Error('User alrady exists!');
+  }
+
+  const result = await User.create(userData); // build in static method
+
+  // const user = new User(userData);
+  // if (await user.isUserExists(userData.userId.toString())) {
+  //   throw new Error('User alrady exists!');
+  // }
+
+  // const result = await user.save(); // build in inst
   return result;
 };
 
 const getAllUsersFromDB = async () => {
-  const result = await UserModel.find();
+  const result = await User.find();
   return result;
 };
 
 const getSingleUserFromDB = async (userId: string) => {
-  const result = await UserModel.findOne({ userId });
+  const result = await User.findOne({ userId });
   return result;
 };
 

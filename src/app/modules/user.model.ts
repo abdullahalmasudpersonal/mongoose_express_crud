@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { TUser, TUserName } from './user.interface';
+import { TUser, TUserAddress, TUserName } from './user/user.interface';
 
 const fullNameSchema = new Schema<TUserName>({
   firstName: {
@@ -11,6 +11,24 @@ const fullNameSchema = new Schema<TUserName>({
     type: String,
     trim: true,
     required: [true, 'Lust name is required'],
+  },
+});
+
+const addressSchema = new Schema<TUserAddress>({
+  street: {
+    type: String,
+    trim: true,
+    required: [true, 'Street name is required'],
+  },
+  city: {
+    type: String,
+    trim: true,
+    required: [true, 'City name is required'],
+  },
+  country: {
+    type: String,
+    trim: true,
+    required: [true, 'Country name is required'],
   },
 });
 
@@ -54,22 +72,17 @@ const userSchema = new Schema<TUser>({
     required: [true, 'Active status is required'],
     default: false,
   },
+  hobbies: [
+    {
+      type: String,
+      trim: true,
+      required: [true, 'Hobbies is required'],
+    },
+  ],
   address: {
-    street: {
-      type: String,
-      trim: true,
-      required: [true, 'Street name is required'],
-    },
-    city: {
-      type: String,
-      trim: true,
-      required: [true, 'City name is required'],
-    },
-    country: {
-      type: String,
-      trim: true,
-      required: [true, 'Country name is required'],
-    },
+    type: addressSchema,
+    trim: true,
+    required: [true, 'Address is required'],
   },
 });
 

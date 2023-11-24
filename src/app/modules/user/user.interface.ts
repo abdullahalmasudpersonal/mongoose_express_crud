@@ -3,6 +3,12 @@ export type TUserName = {
   lustName: string;
 };
 
+export type TUserAddress = {
+  street: string;
+  city: string;
+  country: string;
+};
+
 export type TUser = {
   userId: number;
   userName: string;
@@ -11,10 +17,6 @@ export type TUser = {
   age: number;
   email: string;
   isActive: boolean;
-  hobbies?: [string, string];
-  address: {
-    street: string;
-    city: string;
-    country: string;
-  };
+  hobbies: string[];
+  address: TUserAddress;
 };

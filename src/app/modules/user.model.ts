@@ -40,59 +40,74 @@ const addressSchema = new Schema<TUserAddress>({
   },
 });
 
-const userSchema = new Schema<TUser, UserModel>({
-  userId: {
-    type: Number,
-    trim: true,
-    unique: true,
-    required: [true, 'UserId is required'],
-  },
-  userName: {
-    type: String,
-    trim: true,
-    unique: true,
-    required: [true, 'User Name is required'],
-  },
-  password: {
-    type: String,
-    trim: true,
-    unique: true,
-    required: [true, 'Password is required'],
-  },
-  fullName: {
-    type: fullNameSchema,
-    trim: true,
-    required: [true, 'Full name is required'],
-  },
-  age: {
-    type: Number,
-    trim: true,
-    required: [true, 'Age is required'],
-  },
-  email: {
-    type: String,
-    trim: true,
-    unique: true,
-    required: [true, 'Email is required'],
-  },
-  isActive: {
-    type: Boolean,
-    trim: true,
-    required: [true, 'Active status is required'],
-    default: false,
-  },
-  hobbies: [
-    {
+const userSchema = new Schema<TUser, UserModel>(
+  {
+    userId: {
+      type: Number,
+      trim: true,
+      unique: true,
+      required: [true, 'UserId is required'],
+    },
+    userName: {
       type: String,
       trim: true,
-      required: [true, 'Hobbies is required'],
+      unique: true,
+      required: [true, 'User Name is required'],
     },
-  ],
-  address: {
-    type: addressSchema,
-    trim: true,
-    required: [true, 'Address is required'],
+    password: {
+      type: String,
+      trim: true,
+      required: [true, 'Password is required'],
+    },
+    fullName: {
+      type: fullNameSchema,
+      trim: true,
+      required: [true, 'Full name is required'],
+    },
+    age: {
+      type: Number,
+      trim: true,
+      required: [true, 'Age is required'],
+    },
+    email: {
+      type: String,
+      trim: true,
+      unique: true,
+      required: [true, 'Email is required'],
+    },
+    isActive: {
+      type: Boolean,
+      trim: true,
+      required: [true, 'Active status is required'],
+      default: false,
+    },
+    hobbies: [
+      {
+        type: String,
+        trim: true,
+        required: [true, 'Hobbies is required'],
+      },
+    ],
+    address: {
+      type: addressSchema,
+      trim: true,
+      required: [true, 'Address is required'],
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
+  {
+    toJSON: {
+      virtuals: true,
+    },
+  },
+);
+
+/// virtual
+userSchema.virtual('fullNames').get(function () {
+  return `${this.fullName.firstName} ${this.fullName.lustName}`;
 });
 
 /// pre save middleware / hooks : will work on create() save()
@@ -110,8 +125,27 @@ userSchema.pre('save', async function (next) {
 });
 
 // post save middleware / hook
-userSchema.post('save', function () {
-  console.log(this, 'post hook : we saved our data');
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+// query middleware
+userSchema.pre('find', function (next) {
+  //console.log(this);
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+userSchema.pre('findOne', function (next) {
+  //console.log(this);
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+userSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  //this.find({ isDeleted: { $ne: true } });
+  next();
 });
 
 // create a custom static method

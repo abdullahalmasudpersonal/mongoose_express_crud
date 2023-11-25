@@ -123,10 +123,39 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+const userOrderUpdate = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const { productName, price, quantity } = req.body;
+
+    const orderInfo = {
+      productName,
+      price,
+      quantity,
+    };
+
+    const result = await UserServices.userOrderUpdateFromDB(userId, orderInfo);
+    res.status(200).json({
+      success: true,
+      message: 'Order is created successfully!',
+      data: result,
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Something went wrong',
+      error: err,
+    });
+  }
+};
+
 export const UserControllers = {
   createUser,
   getAllUsers,
   getSingleUser,
   deleteUser,
   updateSingleUser,
+  userOrderUpdate,
 };

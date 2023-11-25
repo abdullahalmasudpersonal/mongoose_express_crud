@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import {
+  TOrder,
   TUser,
   TUserAddress,
   TUserName,
@@ -37,6 +38,24 @@ const addressSchema = new Schema<TUserAddress>({
     type: String,
     trim: true,
     required: [true, 'Country name is required'],
+  },
+});
+
+const orderSchema = new Schema<TOrder>({
+  productName: {
+    type: String,
+    trim: true,
+    required: [true, 'Product name is required'],
+  },
+  price: {
+    type: Number,
+    trim: true,
+    required: [true, 'Price is required'],
+  },
+  quantity: {
+    type: Number,
+    trim: true,
+    required: [true, 'Quantity is required'],
   },
 });
 
@@ -97,6 +116,7 @@ const userSchema = new Schema<TUser, UserModel>(
       type: Boolean,
       default: false,
     },
+    orders: [orderSchema],
   },
   {
     toJSON: {

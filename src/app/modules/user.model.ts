@@ -113,7 +113,6 @@ userSchema.virtual('fullNames').get(function () {
 /// pre save middleware / hooks : will work on create() save()
 userSchema.pre('save', async function (next) {
   // console.log(this, 'pre hook : we will save the data');
-
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
   // hashing password and save into db
@@ -130,23 +129,24 @@ userSchema.post('save', function (doc, next) {
   next();
 });
 
-// query middleware
+// // query middleware
 userSchema.pre('find', function (next) {
-  //console.log(this);
-  this.find({ isDeleted: { $ne: true } });
-  next();
-});
-userSchema.pre('findOne', function (next) {
-  //console.log(this);
+  //   //console.log(this);
   this.find({ isDeleted: { $ne: true } });
   next();
 });
 
-userSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
-  //this.find({ isDeleted: { $ne: true } });
+userSchema.pre('findOne', function (next) {
+  //   //console.log(this);
+  this.find({ isDeleted: { $ne: true } });
   next();
 });
+
+// userSchema.pre('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+//   //this.find({ isDeleted: { $ne: true } });
+//   next();
+// });
 
 // create a custom static method
 

@@ -32,6 +32,7 @@ const createUser = async (req: Request, res: Response) => {
         },
       },
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -49,6 +50,7 @@ const getAllUsers = async (req: Request, res: Response) => {
       message: 'Users fetched successfully!',
       data: result,
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -62,12 +64,12 @@ const getSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const result = await UserServices.getSingleUserFromDB(userId);
-    console.log(result);
     res.status(200).json({
       success: true,
       message: 'User fetched successfully!',
       data: result,
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -77,29 +79,30 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
-// const updateSingleUser = async (req: Request, res: Response) => {
-//   try {
-//     const { user: userData } = req.body;
-//     const { userId } = req.params;
-//     // const filter = { _id: new ObjectId(id) };
-//     // const options = { upsert: true };
-//     // const updateDoc = {
-//     //   $set: {
-//     //     userData,
-//     //   },
-//     // };
+const updateSingleUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const { user: userData } = req.body;
 
-//     const result = await UserServices.updateSingleUserFromDB(userData, userId);
+    const result = await UserServices.updateSingleUserFromDB(userId, userData);
+    if (!result) {
+      throw new Error("Your userId dose't exists!");
+    }
 
-//     res.status(200).json({
-//       success: true,
-//       message: 'User is created succesfully',
-//       data: result,
-//     });
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
+    res.status(200).json({
+      success: true,
+      message: "User's updated succesfully",
+      data: result,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Something went wrong',
+      error: err,
+    });
+  }
+};
 
 const deleteUser = async (req: Request, res: Response) => {
   try {
@@ -110,6 +113,7 @@ const deleteUser = async (req: Request, res: Response) => {
       message: 'User was deleted successfully!',
       data: result,
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -124,5 +128,5 @@ export const UserControllers = {
   getAllUsers,
   getSingleUser,
   deleteUser,
-  // updateSingleUser,
+  updateSingleUser,
 };

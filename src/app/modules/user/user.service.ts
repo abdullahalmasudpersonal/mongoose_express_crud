@@ -23,22 +23,22 @@ const getAllUsersFromDB = async () => {
 };
 
 const getSingleUserFromDB = async (userId: string) => {
-  /// const result = await User.findOne({ userId });
-
-  const result = await User.aggregate([{ $match: { userId: userId } }]);
+  const result = await User.findOne({ userId });
+  //const result = await User.aggregate([{ $match: { userId: userId } }]);
   return result;
 };
 
-// const updateSingleUserFromDB = async (userId: string, userData: TUser) => {
-//   if (await UserModel.isUserExists(userData.userId.toString())){
-//     // throw new Error('User already exists!')
-//   }
-//   else{
-//     throw new Error('User dose not exists!');
-//   }
-//   const result = await UserModel.updateOne({ userId }, userData);
-//   return result;
-// };
+const updateSingleUserFromDB = async (userId: string, userData: TUser) => {
+  if (await User.isUserExists(userData.userId.toString())) {
+    //throw new Error("Your userId dose't exists!");
+  } else {
+    throw new Error("Your userId dose't exists!");
+  }
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  const result = await User.updateOne({ userId }, userData);
+  const user = await User.findOne({ userId });
+  return user;
+};
 
 const deleteUserFromDB = async (userId: string) => {
   const result = await User.updateOne({ userId }, { isDeleted: true });
@@ -50,5 +50,5 @@ export const UserServices = {
   getAllUsersFromDB,
   getSingleUserFromDB,
   deleteUserFromDB,
-  // updateSingleUserFromDB,
+  updateSingleUserFromDB,
 };

@@ -1,19 +1,20 @@
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
-import { userValidationSchema } from './user.validation';
+import { createUserValidationSchema } from './user.validation';
 
 const createUser = async (req: Request, res: Response) => {
   try {
-    const { user: userData } = req.body;
+    const userData = req.body;
 
     // data validation using zod
-    const zodParsedata = userValidationSchema.parse(userData);
+    const zodParsedata = createUserValidationSchema.parse(userData);
 
     const result = await UserServices.createUserIntoDB(zodParsedata);
 
     res.status(200).json({
       success: true,
       message: 'User created  successfully!',
+      //data: result,
       data: {
         userId: result.userId,
         username: result.userName,

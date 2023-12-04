@@ -5,9 +5,9 @@ import {
   TUserAddress,
   TUserName,
   UserModel,
-} from './user/user.interface';
+} from './user.interface';
 import bcrypt from 'bcrypt';
-import config from '../config';
+import config from '../../config';
 
 const fullNameSchema = new Schema<TUserName>({
   firstName: {

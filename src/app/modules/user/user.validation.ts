@@ -11,7 +11,8 @@ const addressValidationSchema = z.object({
   country: z.string().min(1).max(20),
 });
 
-export const userValidationSchema = z.object({
+export const createUserValidationSchema = z.object({
+  //body: z.object({
   userId: z.number().int(),
   userName: z.string().min(1).max(30),
   password: z.string().min(6).max(20),
@@ -21,5 +22,10 @@ export const userValidationSchema = z.object({
   isActive: z.boolean(),
   hobbies: z.array(z.string()),
   address: addressValidationSchema,
-  isDeleted: z.boolean(),
+  // isDeleted: z.boolean(),
+  // }),
 });
+
+export const userValidation = {
+  createUserValidationSchema,
+};

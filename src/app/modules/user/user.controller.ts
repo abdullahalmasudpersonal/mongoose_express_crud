@@ -1,15 +1,14 @@
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
-import { createUserValidationSchema } from './user.validation';
 
 const createUser = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
 
     // data validation using zod
-    const zodParsedata = createUserValidationSchema.parse(userData);
+    /// const zodParsedata = createUserValidationSchema.parse(userData);
 
-    const result = await UserServices.createUserIntoDB(zodParsedata);
+    const result = await UserServices.createUserIntoDB(userData);
 
     res.status(200).json({
       success: true,
@@ -83,7 +82,7 @@ const getSingleUser = async (req: Request, res: Response) => {
 const updateSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const { user: userData } = req.body;
+    const userData = req.body;
 
     const result = await UserServices.updateSingleUserFromDB(userId, userData);
     if (!result) {
@@ -95,6 +94,7 @@ const updateSingleUser = async (req: Request, res: Response) => {
       message: "User's updated succesfully",
       data: result,
     });
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
@@ -109,10 +109,13 @@ const deleteUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const result = await UserServices.deleteUserFromDB(userId);
+    if (!result) {
+      throw new Error('Failed to delete student');
+    }
     res.status(200).json({
       success: true,
       message: 'User was deleted successfully!',
-      data: result,
+      data: null,
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {

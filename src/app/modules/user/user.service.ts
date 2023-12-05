@@ -18,12 +18,29 @@ const createUserIntoDB = async (userData: TUser) => {
 };
 
 const getAllUsersFromDB = async () => {
-  const result = await User.find();
+  const result = await User.find()
+    .select('-userId')
+    .select('-password')
+    .select('-_id')
+    .select('-fullName._id')
+    .select('-isActive')
+    .select('-hobbies')
+    .select('-isDeleted')
+    .select('-address._id')
+    .select('-orders')
+    .select('-__v');
   return result;
 };
 
 const getSingleUserFromDB = async (userId: string) => {
-  const result = await User.findOne({ userId });
+  const result = await User.findOne({ userId })
+    .select('-password')
+    .select('-_id')
+    .select('-fullName._id')
+    .select('-isDeleted')
+    .select('-address._id')
+    .select('-orders')
+    .select('-__v');
   //const result = await User.aggregate([{ $match: { userId: userId } }]);
   return result;
 };
@@ -36,27 +53,35 @@ const updateSingleUserFromDB = async (userId: string, userData: TUser) => {
   }
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   const result = await User.updateOne({ userId }, userData);
-  const user = await User.findOne({ userId });
+  const user = await User.findOne({ userId })
+    .select('-password')
+    .select('-_id')
+    .select('-fullName._id')
+    .select('-isDeleted')
+    .select('-address._id')
+    .select('-orders')
+    .select('-__v');
   return user;
 };
 
 const deleteUserFromDB = async (userId: string) => {
   const result = await User.updateOne({ userId }, { isDeleted: true });
+
   return result;
 };
 
-// const userOrderUpdateFromDB = async (userId: string, orderInfo: TOrder) => {
-//   try {
-//     if (await User.isUserExists(userId.toString())) {
-//       ////////// anything
-//     } else {
-//       throw new Error('User is not exists!');
-//     }
-//     const existUser = await User.findOne({ userId });
-//   } catch (err) {
-//     ///
-//   }
-// };
+const userOrderUpdateFromDB = async (userId: string, userData: TUser) => {
+  try {
+    if (await User.isUserExists(userId.toString())) {
+      ////////// anything
+    } else {
+      throw new Error('User is not exists!');
+    }
+    const existUser = await User.findOne({ userId });
+  } catch (err) {
+    ///
+  }
+};
 
 export const UserServices = {
   createUserIntoDB,
@@ -64,5 +89,5 @@ export const UserServices = {
   getSingleUserFromDB,
   deleteUserFromDB,
   updateSingleUserFromDB,
-  // userOrderUpdateFromDB,
+  userOrderUpdateFromDB,
 };

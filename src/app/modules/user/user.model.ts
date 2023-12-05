@@ -126,9 +126,9 @@ const userSchema = new Schema<TUser, UserModel>(
 );
 
 /// virtual
-userSchema.virtual('fullNames').get(function () {
-  return `${this.fullName.firstName} ${this.fullName.lustName}`;
-});
+// userSchema.virtual('fullNames').get(function () {
+//   return `${this.fullName.firstName} ${this.fullName.lustName}`;
+// });
 
 /// pre save middleware / hooks : will work on create() save()
 userSchema.pre('save', async function (next) {

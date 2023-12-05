@@ -1,17 +1,23 @@
 import express from 'express';
 import { UserControllers } from './user.controller';
+import validateRequest from '../../utils/validateRequiest';
+import { createUserValidationSchema } from './user.validation';
 
 const router = express.Router();
 
-router.post('/', UserControllers.createUser);
+router.post(
+  '/',
+  /* validateRequest(createUserValidationSchema), */
+  UserControllers.createUser,
+);
 
 router.get('/', UserControllers.getAllUsers);
 
 router.get('/:userId', UserControllers.getSingleUser);
 
-router.delete('/:userId', UserControllers.deleteUser);
-
 router.put('/:userId', UserControllers.updateSingleUser);
+
+router.delete('/:userId', UserControllers.deleteUser);
 
 router.put('/:userId/orders', UserControllers.userOrderUpdate);
 

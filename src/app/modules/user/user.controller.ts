@@ -157,6 +157,44 @@ const userOrderUpdate = async (req: Request, res: Response) => {
   }
 };
 
+const getOrdersSingleUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await UserServices.getOrdersSingleUserFromDB(userId);
+    res.status(200).json({
+      success: true,
+      message: 'Get orders for single user successfully!!',
+      data: result,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Something went wrong',
+      error: err,
+    });
+  }
+};
+
+const getTotalPriceSingleUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await UserServices.getTotalPriceSingleUserFromDB(userId);
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
+      data: result,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Something went wrong',
+      error: err,
+    });
+  }
+};
+
 export const UserControllers = {
   createUser,
   getAllUsers,
@@ -164,4 +202,6 @@ export const UserControllers = {
   deleteUser,
   updateSingleUser,
   userOrderUpdate,
+  getOrdersSingleUser,
+  getTotalPriceSingleUser,
 };

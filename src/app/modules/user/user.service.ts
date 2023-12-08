@@ -97,6 +97,59 @@ const userOrderUpdateFromDB = async (userId: string, orderInfo: TOrder) => {
   }
 };
 
+const getOrdersSingleUserFromDB = async (userId: string) => {
+  try {
+    if (await User.isUserExists(userId.toString())) {
+      // throw new Error('User already exists!')
+    } else {
+      throw new Error('User not found!');
+    }
+
+    const existingUser = await User.findOne({ userId });
+
+    if (!existingUser) {
+      throw new Error('User not found');
+    }
+
+    if (!existingUser.orders || existingUser.orders.length === 0) {
+      throw new Error('User has no orders');
+    }
+
+    const order_result = { orders: existingUser.orders };
+
+    return order_result;
+  } catch (err) {
+    throw new Error('dfsd');
+  }
+};
+
+const getTotalPriceSingleUserFromDB = async (userId: string) => {
+  try {
+    const existUser = await User.findOne({ userId });
+    if (!existUser) {
+      throw new Error('User not found!');
+    }
+    const order = existUser.orders || [];
+
+    let totalPrice = 0;
+    for (let a = 0; a < order.length; a++) {
+      const orders = order[a];
+      if (
+        order &&
+        orders.price !== undefined &&
+        orders.quantity !== undefined
+      ) {
+        totalPrice = orders.price * orders.quantity;
+      } else {
+        throw new Error('Order price or quantity undefined');
+      }
+    }
+    return totalPrice;
+  } catch (err) {
+    throw new Error('get user order errors');
+  }
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
@@ -104,4 +157,6 @@ export const UserServices = {
   deleteUserFromDB,
   updateSingleUserFromDB,
   userOrderUpdateFromDB,
+  getOrdersSingleUserFromDB,
+  getTotalPriceSingleUserFromDB,
 };

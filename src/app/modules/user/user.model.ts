@@ -45,19 +45,16 @@ const orderSchema = new Schema<TOrder>({
   productName: {
     type: String,
     trim: true,
-    unique: false,
     required: [true, 'Product name is required'],
   },
   price: {
     type: Number,
     trim: true,
-    unique: false,
     required: [true, 'Price is required'],
   },
   quantity: {
     type: Number,
     trim: true,
-    unique: false,
     required: [true, 'Quantity is required'],
   },
 });
@@ -115,13 +112,10 @@ const userSchema = new Schema<TUser, UserModel>(
       trim: true,
       required: [true, 'Address is required'],
     },
+    orders: [orderSchema],
     isDeleted: {
       type: Boolean,
       default: false,
-    },
-    orders: {
-      type: [orderSchema],
-      unique: false,
     },
   },
   {

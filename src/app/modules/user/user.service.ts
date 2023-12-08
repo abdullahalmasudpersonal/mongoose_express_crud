@@ -49,7 +49,7 @@ const updateSingleUserFromDB = async (userId: string, userData: TUser) => {
   if (await User.isUserExists(userData.userId.toString())) {
     //throw new Error("Your userId dose't exists!");
   } else {
-    throw new Error("Your userId dose't exists!");
+    throw new Error('User not found!');
   }
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   const result = await User.updateOne({ userId }, userData);
@@ -66,60 +66,39 @@ const updateSingleUserFromDB = async (userId: string, userData: TUser) => {
 
 const deleteUserFromDB = async (userId: string) => {
   const result = await User.updateOne({ userId }, { isDeleted: true });
-
   return result;
 };
 
 const userOrderUpdateFromDB = async (userId: string, orderInfo: TOrder) => {
   try {
-    if (await User.isUserExists(userId.toString())) {
-      // throw new Error('User already exists!')
-    } else {
-      throw new Error('User not found!');
-    }
-
     const existingUser = await User.findOne({ userId });
-
     if (!existingUser) {
       throw new Error('User not found');
     }
-
     if (!existingUser.orders) {
-      existingUser.orders = []; // Create 'orders' array if it doesn't exist
+      existingUser.orders = [];
     }
-
-    existingUser.orders.push(orderInfo); // Add new order to the 'orders' array
-
+    existingUser.orders.push(orderInfo);
     const result = await existingUser.save();
     return result;
   } catch (err) {
-    throw new Error('The orders does not exist');
+    throw new Error('The orders does not exist!!');
   }
 };
 
 const getOrdersSingleUserFromDB = async (userId: string) => {
   try {
-    if (await User.isUserExists(userId.toString())) {
-      // throw new Error('User already exists!')
-    } else {
-      throw new Error('User not found!');
-    }
-
-    const existingUser = await User.findOne({ userId });
-
-    if (!existingUser) {
+    const existUser = await User.findOne({ userId });
+    if (!existUser) {
       throw new Error('User not found');
     }
-
-    if (!existingUser.orders || existingUser.orders.length === 0) {
-      throw new Error('User has no orders');
+    if (!existUser.orders || existUser.orders.length === 0) {
+      throw new Error('User has no order!');
     }
-
-    const order_result = { orders: existingUser.orders };
-
-    return order_result;
+    const result = { orders: existUser.orders };
+    return result;
   } catch (err) {
-    throw new Error('dfsd');
+    throw new Error('User order get error!');
   }
 };
 

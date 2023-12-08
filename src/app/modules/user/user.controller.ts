@@ -38,7 +38,11 @@ const createUser = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: err.message || 'Something went wrong',
-      error: err,
+      error: {
+        code: 404,
+        description: 'Something went wrong',
+        err,
+      },
     });
   }
 };
@@ -56,7 +60,11 @@ const getAllUsers = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: err.message || 'Something went wrong',
-      error: err,
+      error: {
+        code: 404,
+        description: 'Something went wrong',
+        err,
+      },
     });
   }
 };
@@ -75,7 +83,11 @@ const getSingleUser = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: err.message || 'Something went wrong',
-      error: err,
+      error: {
+        code: 404,
+        description: 'Something went wrong',
+        err,
+      },
     });
   }
 };
@@ -87,7 +99,7 @@ const updateSingleUser = async (req: Request, res: Response) => {
 
     const result = await UserServices.updateSingleUserFromDB(userId, userData);
     if (!result) {
-      throw new Error("Your userId dose't exists!");
+      throw new Error('User not found!');
     }
 
     res.status(200).json({
@@ -100,8 +112,12 @@ const updateSingleUser = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || 'Something went wrong',
-      error: err,
+      message: err.message || 'Something went wrong!',
+      error: {
+        code: 404,
+        description: 'Something went wrong!',
+        err,
+      },
     });
   }
 };
@@ -111,7 +127,7 @@ const deleteUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const result = await UserServices.deleteUserFromDB(userId);
     if (!result) {
-      throw new Error('Failed to delete student');
+      throw new Error('Failed to delete user');
     }
     res.status(200).json({
       success: true,
@@ -123,36 +139,41 @@ const deleteUser = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: err.message || 'Something went wrong',
-      error: err,
+      error: {
+        code: 404,
+        description: 'Something went wrong',
+        err,
+      },
     });
   }
 };
 
-const userOrderUpdate = async (req: Request, res: Response) => {
+const updateUserOrder = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const { productName, price, quantity } = req.body;
-
     const orderInfo = {
       productName,
       price,
       quantity,
     };
-
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     const result = await UserServices.userOrderUpdateFromDB(userId, orderInfo);
     res.status(200).json({
       success: true,
-      message: 'Order created successfully!!',
+      message: 'Order updated successfully!!',
       data: null,
     });
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
       message: err.message || 'Something went wrong',
-      error: err,
+      error: {
+        code: 404,
+        description: 'Something went wrong',
+        err,
+      },
     });
   }
 };
@@ -171,7 +192,11 @@ const getOrdersSingleUser = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: err.message || 'Something went wrong',
-      error: err,
+      error: {
+        code: 404,
+        description: 'User order get error',
+        err,
+      },
     });
   }
 };
@@ -190,7 +215,11 @@ const getTotalPriceSingleUser = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: err.message || 'Something went wrong',
-      error: err,
+      error: {
+        code: 404,
+        description: 'Something went wrong',
+        err,
+      },
     });
   }
 };
@@ -201,7 +230,7 @@ export const UserControllers = {
   getSingleUser,
   deleteUser,
   updateSingleUser,
-  userOrderUpdate,
+  updateUserOrder,
   getOrdersSingleUser,
   getTotalPriceSingleUser,
 };

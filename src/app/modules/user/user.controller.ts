@@ -1,14 +1,15 @@
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
+import { createUserValidationSchema } from './user.validation';
 
 const createUser = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
 
     // data validation using zod
-    /// const zodParsedata = createUserValidationSchema.parse(userData);
+    const zodParsedata = createUserValidationSchema.parse(userData);
 
-    const result = await UserServices.createUserIntoDB(userData);
+    const result = await UserServices.createUserIntoDB(zodParsedata);
 
     res.status(200).json({
       success: true,
@@ -138,11 +139,12 @@ const userOrderUpdate = async (req: Request, res: Response) => {
       quantity,
     };
 
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     const result = await UserServices.userOrderUpdateFromDB(userId, orderInfo);
     res.status(200).json({
       success: true,
-      message: 'Order is created successfully!',
-      data: result,
+      message: 'Order created successfully!!',
+      data: null,
     });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

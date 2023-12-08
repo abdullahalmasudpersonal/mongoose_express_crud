@@ -1,4 +1,4 @@
-import { TUser } from './user.interface';
+import { TOrder, TUser } from './user.interface';
 import { User } from './user.model';
 
 const createUserIntoDB = async (userData: TUser) => {
@@ -70,16 +70,30 @@ const deleteUserFromDB = async (userId: string) => {
   return result;
 };
 
-const userOrderUpdateFromDB = async (userId: string, userData: TUser) => {
+const userOrderUpdateFromDB = async (userId: string, orderInfo: TOrder) => {
   try {
     if (await User.isUserExists(userId.toString())) {
-      ////////// anything
+      // throw new Error('User already exists!')
     } else {
-      throw new Error('User is not exists!');
+      throw new Error('User not found!');
     }
-    const existUser = await User.findOne({ userId });
+
+    const existingUser = await User.findOne({ userId });
+
+    if (!existingUser) {
+      throw new Error('User not found');
+    }
+
+    if (!existingUser.orders) {
+      existingUser.orders = []; // Create 'orders' array if it doesn't exist
+    }
+
+    existingUser.orders.push(orderInfo); // Add new order to the 'orders' array
+
+    const result = await existingUser.save();
+    return result;
   } catch (err) {
-    ///
+    throw new Error('The orders does not exist');
   }
 };
 

@@ -15,7 +15,7 @@ const fullNameSchema = new Schema<TUserName>({
     trim: true,
     required: [true, 'First name is required'],
   },
-  lustName: {
+  lastName: {
     type: String,
     trim: true,
     maxlength: [20, 'Password can not be more then 20 characters'],
@@ -67,7 +67,7 @@ const userSchema = new Schema<TUser, UserModel>(
       unique: true,
       required: [true, 'UserId is required'],
     },
-    userName: {
+    username: {
       type: String,
       trim: true,
       unique: true,
@@ -174,6 +174,25 @@ userSchema.statics.isUserExists = async function (userId: string) {
   const existingUser = await User.findOne({ userId });
   return existingUser;
 };
+
+/// pre save middleware / hooks : will work on create() save()
+userSchema.pre('save', async function (next) {
+  // console.log(this, 'pre hook : we will save the data');
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  // hashing password and save into db
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
+
+// post save middleware / hook
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
 
 // creating a custom instance method
 // userSchema.methods.isUserExists = async function (userId: string) {

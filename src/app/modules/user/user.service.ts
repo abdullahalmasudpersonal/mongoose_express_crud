@@ -7,12 +7,10 @@ const createUserIntoDB = async (userData: TUser) => {
   }
 
   const result = await User.create(userData); // build in static method
-
   // const user = new User(userData);
   // if (await user.isUserExists(userData.userId.toString())) {
   //   throw new Error('User alrady exists!');
   // }
-
   // const result = await user.save(); // build in inst
   return result;
 };

@@ -2,7 +2,7 @@ import { Model } from 'mongoose';
 
 export type TUserName = {
   firstName: string;
-  lustName: string;
+  lastName: string;
 };
 
 export type TUserAddress = {
@@ -19,7 +19,7 @@ export type TOrder = {
 
 export type TUser = {
   userId: number;
-  userName: string;
+  username: string;
   password: string;
   fullName: TUserName;
   age: number;

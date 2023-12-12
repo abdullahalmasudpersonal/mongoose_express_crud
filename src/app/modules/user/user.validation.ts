@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const fullNameValidationSchema = z.object({
   firstName: z.string().min(1).max(20),
-  lustName: z.string().min(1).max(20),
+  lastName: z.string().min(1).max(20),
 });
 
 const addressValidationSchema = z.object({
@@ -19,7 +19,7 @@ const orderSchema = z.object({
 
 export const createUserValidationSchema = z.object({
   userId: z.number().int(),
-  userName: z.string().min(1).max(30),
+  username: z.string().min(1).max(30),
   password: z.string().min(6).max(20),
   fullName: fullNameValidationSchema,
   age: z.number().int(),
